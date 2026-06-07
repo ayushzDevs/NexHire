@@ -1,0 +1,24 @@
+{
+  "name": "nexhire",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ayushzDevs/NexHire.git"
+  },
+  "author": "Ayush Chakraborty",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ayushzDevs/NexHire/issues"
+  },
+  "homepage": "https://github.com/ayushzDevs/NexHire#readme",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mongoose": "^9.6.3"
+  }
+}
