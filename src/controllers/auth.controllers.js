@@ -144,7 +144,7 @@ async function LogoutUserController(req,res){
 
 
 async function getMeController(req,res){
-    const user = userModel.findById(req.user._id)
+    const user = await userModel.findById(req.user.id)
 
     return res.status(200).json({
         message:"ser detailes fetched successfully",
