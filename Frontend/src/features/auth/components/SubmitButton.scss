@@ -1,0 +1,58 @@
+@use "../../../styles/variables" as *;
+
+.submit-btn {
+  width: 100%;
+  padding: 13px;
+  background: $teal;
+  border: none;
+  border-radius: $radius-md;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: $font-body;
+  letter-spacing: 0.4px;
+  color: $teal-dark;
+  cursor: pointer;
+  transition: opacity $transition-fast, transform $transition-fast;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+
+  &:hover:not(:disabled) {
+    opacity: 0.88;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  &__label {
+    line-height: 1;
+  }
+
+  &__arrow {
+    font-size: 15px;
+    transition: transform $transition-fast;
+  }
+
+  &:hover:not(:disabled) &__arrow {
+    transform: translateX(3px);
+  }
+
+  // spinner
+  &__spinner {
+    display: block;
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid rgba($teal-dark, 0.3);
+    border-top-color: $teal-dark;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+}

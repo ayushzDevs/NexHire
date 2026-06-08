@@ -1,0 +1,37 @@
+@use "../../../styles/variables" as *;
+
+.oauth-btn {
+  width: 100%;
+  padding: 12px;
+  background: $bg-input;
+  border: 0.5px solid $border-input;
+  border-radius: $radius-md;
+  font-size: 13px;
+  font-family: $font-body;
+  font-weight: 300;
+  color: $text-muted;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  transition:
+    border-color $transition-fast,
+    color $transition-fast,
+    background $transition-fast;
+  margin-bottom: 8px;
+
+  &:hover {
+    border-color: $teal;
+    color: $text-primary;
+    background: lighten($bg-input, 1.5%);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  svg {
+    flex-shrink: 0;
+  }
+}

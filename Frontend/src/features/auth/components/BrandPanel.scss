@@ -1,0 +1,133 @@
+@use "../../../styles/variables" as *;
+
+.brand-panel {
+  width: 420px;
+  flex-shrink: 0;
+  background: $bg-deep;
+  display: flex;
+  flex-direction: column;
+  padding: 48px 52px;
+  position: relative;
+  border-right: 0.5px solid $border-subtle;
+  overflow: hidden;
+
+  // ── atmosphere ──
+  &__mesh {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 20% 85%, rgba(15, 110, 86, 0.14) 0%, transparent 60%),
+      radial-gradient(ellipse 55% 45% at 85% 10%, rgba(83, 74, 183, 0.12) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  &__grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(29, 158, 117, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(29, 158, 117, 0.04) 1px, transparent 1px);
+    background-size: 44px 44px;
+    pointer-events: none;
+  }
+
+  // ── logo ──
+  &__logo {
+    font-family: $font-display;
+    font-size: 20px;
+    font-weight: 700;
+    color: $text-primary;
+    letter-spacing: -0.5px;
+    position: relative;
+    z-index: 1;
+
+    span {
+      color: $teal;
+      font-style: italic;
+    }
+  }
+
+  // ── hero ──
+  &__hero {
+    margin-top: auto;
+    margin-bottom: 52px;
+    position: relative;
+    z-index: 1;
+  }
+
+  &__eyebrow {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: $teal;
+    margin-bottom: 16px;
+  }
+
+  &__headline {
+    font-family: $font-display;
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: $text-primary;
+    margin-bottom: 18px;
+    letter-spacing: -1px;
+
+    em {
+      font-style: italic;
+      color: $teal;
+    }
+  }
+
+  &__sub {
+    font-size: 14px;
+    font-weight: 300;
+    color: $text-dim;
+    line-height: 1.7;
+    max-width: 280px;
+  }
+
+  // ── features ──
+  &__features {
+    list-style: none;
+    position: relative;
+    z-index: 1;
+  }
+
+  &__feat {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 0;
+    border-top: 0.5px solid $border-subtle;
+
+    &:last-child {
+      border-bottom: 0.5px solid $border-subtle;
+    }
+  }
+
+  &__feat-num {
+    font-size: 10px;
+    color: $teal;
+    font-weight: 500;
+    letter-spacing: 1px;
+    min-width: 22px;
+  }
+
+  &__feat-label {
+    font-size: 13px;
+    color: $text-muted;
+    font-weight: 300;
+  }
+
+  &__feat-icon {
+    margin-left: auto;
+    font-size: 15px;
+    color: $border-input;
+  }
+
+  // ── responsive ──
+  @media (max-width: 768px) {
+    display: none;
+  }
+}

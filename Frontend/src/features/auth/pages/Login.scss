@@ -1,0 +1,167 @@
+@use "../../../styles/variables" as *;
+
+// ── Eye toggle (local to this page) ────────────────────────────
+.eye-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: $border-icon;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  transition: color $transition-fast;
+  line-height: 1;
+
+  &:hover {
+    color: $text-muted;
+  }
+}
+
+// ── Page layout ─────────────────────────────────────────────────
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  background: $bg-deep;
+  font-family: $font-body;
+
+  // right half
+  &__right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $bg-panel;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  &__glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 50% at 50% 50%, $purple-glow 0%, transparent 70%);
+    pointer-events: none;
+  }
+}
+
+// ── Form card ───────────────────────────────────────────────────
+.login-form-card {
+  width: 100%;
+  max-width: 380px;
+  position: relative;
+  z-index: 1;
+
+  // header
+  &__header {
+    margin-bottom: 32px;
+    @include animate(0s);
+  }
+
+  &__title {
+    font-family: $font-display;
+    font-size: 26px;
+    font-weight: 700;
+    color: $text-primary;
+    margin-bottom: 7px;
+    letter-spacing: -0.5px;
+  }
+
+  &__sub {
+    font-size: 13px;
+    color: $text-dim;
+    font-weight: 300;
+  }
+
+  // animate form fields in sequence
+  // we can't auto-target children easily so we use animation on FormField wrapper
+  // instead use the page-level animation utilities
+
+  // forgot row
+  &__forgot-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 22px;
+    margin-top: -8px;
+  }
+
+  &__forgot {
+    font-size: 11px;
+    color: $teal;
+    text-decoration: none;
+    font-weight: 400;
+    transition: opacity $transition-fast;
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+
+  // divider
+  &__divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    color: $border-input;
+    font-size: 11px;
+    font-weight: 300;
+
+    &::before,
+    &::after {
+      content: "";
+      flex: 1;
+      height: 0.5px;
+      background: $border-subtle;
+    }
+  }
+
+  // signup
+  &__signup {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 12px;
+    font-weight: 300;
+    color: $text-ghost;
+  }
+
+  &__signup-link {
+    color: $teal;
+    text-decoration: none;
+    font-weight: 400;
+    transition: opacity $transition-fast;
+
+    &:hover {
+      opacity: 0.75;
+    }
+  }
+}
+
+// ── Staggered entrance animations ───────────────────────────────
+// Apply animation delays to direct children of the form card
+.login-form-card {
+  & > *:nth-child(1) { @include animate(0s); }
+  & > *:nth-child(2) { @include animate(0.07s); }
+  & > *:nth-child(3) { @include animate(0.14s); }
+  & > *:nth-child(4) { @include animate(0.21s); }
+  & > *:nth-child(5) { @include animate(0.28s); }
+  & > *:nth-child(6) { @include animate(0.35s); }
+  & > *:nth-child(7) { @include animate(0.40s); }
+  & > *:nth-child(8) { @include animate(0.44s); }
+  & > *:nth-child(9) { @include animate(0.48s); }
+}
+
+// ── Mobile ───────────────────────────────────────────────────────
+@media (max-width: 768px) {
+  .login-page {
+    flex-direction: column;
+
+    &__right {
+      min-height: 100vh;
+    }
+  }
+
+  .login-form-card {
+    max-width: 100%;
+  }
+}

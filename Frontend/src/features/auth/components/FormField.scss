@@ -1,0 +1,83 @@
+@use "../../../styles/variables" as *;
+
+.form-field {
+  margin-bottom: 20px;
+
+  &__label {
+    display: block;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: $text-ghost;
+    margin-bottom: 8px;
+  }
+
+  &__wrap {
+    position: relative;
+  }
+
+  &__input {
+    width: 100%;
+    background: $bg-input;
+    border: 0.5px solid $border-input;
+    border-radius: $radius-md;
+    padding: 13px 42px 13px 15px;
+    font-size: 13px;
+    font-family: $font-body;
+    font-weight: 300;
+    color: $text-primary;
+    outline: none;
+    transition:
+      border-color $transition-med,
+      background $transition-med,
+      box-shadow $transition-med;
+
+    &::placeholder {
+      color: $text-placeholder;
+    }
+
+    &:focus {
+      border-color: $teal;
+      background: lighten($bg-input, 1%);
+      box-shadow: 0 0 0 3px $teal-glow-ring;
+    }
+
+    &--error {
+      border-color: $danger;
+
+      &:focus {
+        box-shadow: 0 0 0 3px rgba($danger, 0.15);
+      }
+    }
+  }
+
+  // static non-interactive icon
+  &__icon {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px;
+    color: $border-icon;
+    pointer-events: none;
+  }
+
+  // slot for interactive elements like eye toggle
+  &__right-slot {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+  }
+
+  &__error {
+    font-size: 11px;
+    color: $danger;
+    margin-top: 6px;
+    font-weight: 300;
+    letter-spacing: 0.2px;
+  }
+}

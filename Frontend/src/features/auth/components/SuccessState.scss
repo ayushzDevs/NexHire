@@ -1,0 +1,36 @@
+@use "../../../styles/variables" as *;
+
+.success-state {
+  text-align: center;
+  padding: 24px 0;
+  @include animate(0s);
+
+  &__icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba($teal-mid, 0.15);
+    border: 0.5px solid rgba($teal, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 24px;
+    color: $teal;
+  }
+
+  &__title {
+    font-family: $font-display;
+    font-size: 24px;
+    font-weight: 700;
+    color: $text-primary;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+
+  &__msg {
+    font-size: 13px;
+    color: $text-dim;
+    font-weight: 300;
+  }
+}
