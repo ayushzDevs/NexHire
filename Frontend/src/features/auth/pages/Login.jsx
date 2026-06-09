@@ -7,6 +7,8 @@ import OAuthButton   from "../components/OAuthButton.jsx";
 import SuccessState  from "../components/SuccessState.jsx";
 import "./Login.scss";
 
+import authApi from "../../../api/authApi.js";
+
 // ── Validation ───────────────────────────────────────────────
 function validate(email, password) {
   const errors = {};
@@ -53,29 +55,23 @@ export default function LoginPage() {
     setErrors({});
     setLoading(true);
 
-    // ── TODO: replace with axios call ──
-    //
-    // import axios from "axios";
-    //
-    // try {
-    //   const { data } = await axios.post("/auth/login", { email, password }, {
-    //     withCredentials: true,          // sends httpOnly cookie
-    //   });
-    //   localStorage.setItem("nexhire_token", data.token);  // or rely on cookie
-    //   setSuccess(true);
-    //   setTimeout(() => navigate("/dashboard"), 1500);
-    // } catch (err) {
-    //   const msg = err.response?.data?.message || "Invalid email or password";
-    //   setErrors({ password: msg });
-    //   setLoading(false);
-    // }
+    try{
+      const data = await authApi.login(email, password);
+      localStorage.setItem("token", data.token);
+      setSuccess(true);
 
-    // ── mock delay (remove when axios is wired) ──
-    setTimeout(() => {
-          setLoading(false);
-          setSuccess(true);
-          setTimeout(() => navigate("/dashboard"), 1500);  // ← redirect after success screen
-        }, 1800);
+      setTimeout(()=>navigate("/"),1500);
+    }
+    catch(e){
+      const msg = e.response?.data?.message || "Login Failed";
+      setErrors({"password": msg})
+      setLoading(false)
+    }
+
+
+
+
+
       }
 
 

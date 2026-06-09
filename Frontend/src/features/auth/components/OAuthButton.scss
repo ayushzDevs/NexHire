@@ -1,3 +1,4 @@
+@use "sass:color";
 @use "../../../styles/variables" as *;
 
 .oauth-btn {
@@ -24,7 +25,7 @@
   &:hover {
     border-color: $teal;
     color: $text-primary;
-    background: lighten($bg-input, 1.5%);
+    background: color.adjust($bg-input, $lightness: 1.5%);
   }
 
   &:active {

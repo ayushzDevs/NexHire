@@ -1,3 +1,4 @@
+@use "sass:color";
 @use "../../../styles/variables" as *;
 
 .form-field {
@@ -39,7 +40,7 @@
 
     &:focus {
       border-color: $teal;
-      background: lighten($bg-input, 1%);
+      background: color.adjust($bg-input, $lightness: 1%);
       box-shadow: 0 0 0 3px $teal-glow-ring;
     }
 

@@ -6,6 +6,9 @@ import OAuthButton      from "../components/OAuthButton";
 import SuccessState     from "../components/SuccessState";
 import PasswordStrength from "../components/PasswordStrength";
 import "./RegisterPage.scss";
+import authApi from "../../../api/authApi";
+import { useNavigate } from "react-router";
+
 
 // ── Validation ────────────────────────────────────────────────
 function validate(username, email, password, confirm) {
@@ -48,6 +51,7 @@ function EyeToggle({ show, onToggle }) {
 
 // ── Page ─────────────────────────────────────────────────────
 export default function RegisterPage() {
+  const navigate = useNavigate(); 
   const [username, setUsername]       = useState("");
   const [email,    setEmail]          = useState("");
   const [password, setPassword]       = useState("");
@@ -70,36 +74,29 @@ export default function RegisterPage() {
     setAgreeErr(false);
     setLoading(true);
 
-    // ── TODO: replace with axios call ──
-    //
-    // import axios from "axios";
-    //
-    // try {
-    //   const { data } = await axios.post("/auth/signup", {
-    //     username,
-    //     email,
-    //     password,
-    //   }, { withCredentials: true });
-    //   localStorage.setItem("nexhire_token", data.token);
-    //   setSuccess(true);
-    //   setTimeout(() => navigate("/dashboard"), 1500);
-    // } catch (err) {
-    //   const msg = err.response?.data?.message || "Registration failed";
-    //   if (msg.toLowerCase().includes("email")) {
-    //     setErrors({ email: msg });
-    //   } else if (msg.toLowerCase().includes("username")) {
-    //     setErrors({ username: msg });
-    //   } else {
-    //     setErrors({ email: msg });
-    //   }
-    //   setLoading(false);
-    // }
+   
+    try{
 
-    // ── mock delay (remove when axios is wired) ──
-    setTimeout(() => {
-      setLoading(false);
+      const data = await authApi.register(username,email,password);
+      localStorage.setItem("token", data.token);
       setSuccess(true);
-    }, 1800);
+      setTimeout(()=> navigate("/"),1500);
+
+    }
+    catch(e){
+      const msg = e.response?.data?.message || "Registration Failed";
+      
+      if(msg.toLowerCase().includes("username")){
+        setErrors({username : msg});
+      }
+      else{
+        setErrors({email : msg});
+      }
+
+      setLoading(false)
+
+    }
+    
   }
 
   function handleGoogleOAuth() {

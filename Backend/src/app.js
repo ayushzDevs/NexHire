@@ -1,6 +1,12 @@
 const express = require("express")
+const cors = require("cors")
 const cookieParser = require("cookie-parser")
 app = express()
+
+app.use(cors({
+  origin: "http://localhost:5173",   // your Vite frontend URL
+  credentials: true,                 // required for cookies/auth headers
+}));
 
 
 
