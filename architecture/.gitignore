@@ -12,7 +12,7 @@ server/.env
 client/dist/
 client/build/
 
-# Logs
+# Logs    
 logs/
 *.log
 npm-debug.log*

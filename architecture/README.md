@@ -15,7 +15,7 @@ NexHire is a full-stack Gen AI application that analyzes your resume against tar
 | Interview Prep | Generates technical and behavioral questions relevant to the target role |
 
 ---
-
+  
 ## Tech Stack
 
 ### Frontend
