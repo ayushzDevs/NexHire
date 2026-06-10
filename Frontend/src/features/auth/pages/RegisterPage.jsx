@@ -8,7 +8,7 @@ import PasswordStrength from "../components/PasswordStrength";
 import "./RegisterPage.scss";
 import authApi from "../../../api/authApi";
 import { useNavigate } from "react-router";
-
+import { useAuth } from "../hooks/useAuth.js";
 
 // ── Validation ────────────────────────────────────────────────
 function validate(username, email, password, confirm) {
@@ -52,17 +52,24 @@ function EyeToggle({ show, onToggle }) {
 // ── Page ─────────────────────────────────────────────────────
 export default function RegisterPage() {
   const navigate = useNavigate(); 
-  const [username, setUsername]       = useState("");
-  const [email,    setEmail]          = useState("");
-  const [password, setPassword]       = useState("");
-  const [confirm,  setConfirm]        = useState("");
-  const [showPass, setShowPass]       = useState(false);
-  const [showConf, setShowConf]       = useState(false);
-  const [errors,   setErrors]         = useState({});
-  const [loading,  setLoading]        = useState(false);
-  const [success,  setSuccess]        = useState(false);
-  const [agreed,   setAgreed]         = useState(false);
-  const [agreeErr, setAgreeErr]       = useState(false);
+
+  const { handleRegisterHook, loading } = useAuth();  // ← hook layer
+
+
+  /**
+   * @name two_way_binding
+   */
+
+  const [username, setUsername] = useState("");
+  const [email,    setEmail]    = useState("");
+  const [password, setPassword] = useState("");
+  const [confirm,  setConfirm]  = useState("");
+  const [showPass, setShowPass] = useState(false);
+  const [showConf, setShowConf] = useState(false);
+  const [errors,   setErrors]   = useState({});
+  const [success,  setSuccess]  = useState(false);
+  const [agreed,   setAgreed]   = useState(false);
+  const [agreeErr, setAgreeErr] = useState(false);
 
   // ── handlers ─────────────────────────────────────────────
   async function handleRegister() {
@@ -72,33 +79,24 @@ export default function RegisterPage() {
 
     setErrors({});
     setAgreeErr(false);
-    setLoading(true);
+
 
    
-    try{
-
-      const data = await authApi.register(username,email,password);
-      localStorage.setItem("token", data.token);
+    try {
+      await handleRegisterHook({ username, email, password });
       setSuccess(true);
-      setTimeout(()=> navigate("/"),1500);
-
-    }
-    catch(e){
+      setTimeout(() => navigate("/"), 1500);
+    } catch (e) {
       const msg = e.response?.data?.message || "Registration Failed";
-      
-      if(msg.toLowerCase().includes("username")){
-        setErrors({username : msg});
-      }
-      else{
-        setErrors({email : msg});
-      }
 
-      setLoading(false)
-
+      if (msg.toLowerCase().includes("username")) {
+        setErrors({ username: msg });
+      } else {
+        setErrors({ email: msg });
+      }
     }
-    
   }
-
+  
   function handleGoogleOAuth() {
     // TODO: window.location.href = "/auth/google"
     alert("Wire up Passport Google OAuth strategy");

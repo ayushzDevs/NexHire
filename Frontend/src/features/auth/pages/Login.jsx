@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router";
 import React, { useState } from "react";
-import BrandPanel from "../components/BrandPanel.jsx"
+import BrandPanel    from "../components/BrandPanel.jsx";
 import FormField     from "../components/FormField.jsx";
 import SubmitButton  from "../components/SubmitButton.jsx";
 import OAuthButton   from "../components/OAuthButton.jsx";
 import SuccessState  from "../components/SuccessState.jsx";
 import "./Login.scss";
-
 import authApi from "../../../api/authApi.js";
+import { useAuth } from "../hooks/useAuth.js";
 
 // ── Validation ───────────────────────────────────────────────
 function validate(email, password) {
@@ -37,43 +37,35 @@ function EyeToggle({ show, onToggle }) {
 
 // ── Page ──────────────────────────────────────────────────────
 export default function LoginPage() {
-  const navigate = useNavigate(); 
+
+  const navigate = useNavigate();
+
+  const { handleLoginHook, loading } = useAuth();     // ← hook layer
+  const [showPass, setShowPass] = useState(false);    // ← eye toggle state
+
+  /**
+   * @name two_way_binding
+   */
   const [email,    setEmail]    = useState("");
   const [password, setPassword] = useState("");
-  const [showPass, setShowPass] = useState(false);
   const [errors,   setErrors]   = useState({});
-  const [loading,  setLoading]  = useState(false);
   const [success,  setSuccess]  = useState(false);
 
   // ── handlers ──────────────────────────────────────────────
   async function handleLogin() {
     const errs = validate(email, password);
-    if (Object.keys(errs).length) {
-      setErrors(errs);
-      return;
-    }
+    if (Object.keys(errs).length) { setErrors(errs); return; }
     setErrors({});
-    setLoading(true);
 
-    try{
-      const data = await authApi.login(email, password);
-      localStorage.setItem("token", data.token);
+    try {
+      await handleLoginHook({ email, password });
       setSuccess(true);
-
-      setTimeout(()=>navigate("/"),1500);
+      setTimeout(() => navigate("/"), 1500);
+    } catch (e) {
+      const msg = e.response?.data?.message || "Login failed";
+      setErrors({ password: msg });
     }
-    catch(e){
-      const msg = e.response?.data?.message || "Login Failed";
-      setErrors({"password": msg})
-      setLoading(false)
-    }
-
-
-
-
-
-      }
-
+  }
 
   function handleGoogleOAuth() {
     // TODO: window.location.href = "/auth/google"
