@@ -27,7 +27,7 @@ const authApi = {
     },
 
     async getMe(){
-        const {data} = await api.get("/auth/get-me");
+        const {data} = await api.get("/api/auth/get-me");
         return data;
     }
 

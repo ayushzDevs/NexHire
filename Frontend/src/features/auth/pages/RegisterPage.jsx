@@ -85,7 +85,7 @@ export default function RegisterPage() {
     try {
       await handleRegisterHook({ username, email, password });
       setSuccess(true);
-      setTimeout(() => navigate("/"), 1500);
+      setTimeout(() => navigate("/login"), 1500);
     } catch (e) {
       const msg = e.response?.data?.message || "Registration Failed";
 

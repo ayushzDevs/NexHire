@@ -24,17 +24,17 @@ export const useAuth = () =>{
     * 3. Store the received user data in the `user` state using `setUser()`.
     * 4. Hide the loading screen and navigate the authenticated user to the dashboard.
     */
-    const handleLoginHook = async({email,password}) =>{
+    const handleLoginHook = async({ email, password }) => {
         setLoading(true)
-
-        try{const data = await authApi.login({email,password})
-
-        setUser(data.user)}
-        catch(e){
-
+        try {
+            const data = await authApi.login(email, password)  // ← fixed
+            setUser(data.user)
+        } catch(e) {
+            throw e  // ← rethrow so LoginPage catch block receives it
+        } finally {
+            setLoading(false)
         }
-        finally{setLoading(false)}
-    }
+        }
 
     /**
      * @description register Flow:
@@ -46,10 +46,10 @@ export const useAuth = () =>{
 
     const handleRegisterHook = async({username , email , password}) =>{
         setLoading (true)
-        try{const data = await authApi.register({username,email,password})
+        try{const data = await authApi.register(username, email, password)  
         setUser(data.user)}
         catch(e){
-
+            throw e
         }
         finally{setLoading(false)}
     }

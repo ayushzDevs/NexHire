@@ -8,6 +8,7 @@ import SuccessState  from "../components/SuccessState.jsx";
 import "./Login.scss";
 import authApi from "../../../api/authApi.js";
 import { useAuth } from "../hooks/useAuth.js";
+import { Navigate } from "react-router";
 
 // ── Validation ───────────────────────────────────────────────
 function validate(email, password) {
@@ -60,7 +61,7 @@ export default function LoginPage() {
     try {
       await handleLoginHook({ email, password });
       setSuccess(true);
-      setTimeout(() => navigate("/"), 1500);
+      setTimeout(() =>  navigate("/"), 1500);
     } catch (e) {
       const msg = e.response?.data?.message || "Login failed";
       setErrors({ password: msg });
