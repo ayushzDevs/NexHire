@@ -2,6 +2,7 @@ require("dotenv").config()
 const app = require("./src/app")
 const connectDB = require("./src/config/db")
 const cors = require("cors")
+const invokeGeminiApi = require("./src/services/ai.services")
 
 port = 3000;
 
@@ -11,6 +12,8 @@ app.use(cors({
 }));
 
 connectDB()
+
+invokeGeminiApi()
 
 app.listen(port,()=>{
     console.log(`server is running on ${port}`)

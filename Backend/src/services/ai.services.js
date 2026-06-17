@@ -1,0 +1,16 @@
+const { GoogleGenAI } = require("@google/genai")
+
+const ai = new GoogleGenAI({
+    apiKey:process.env.GOOGLE_GENAI_API_KEY
+})
+
+async function invokeGeminiApi(){
+    const response = await ai.models.generateContent({
+        model: "gemini-3.5-flash",
+        contents : "hello gemini ! explain what is interview"
+    })
+
+    console.log(response.text)
+}
+
+module.exports = invokeGeminiApi
