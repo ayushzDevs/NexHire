@@ -61,7 +61,7 @@ export default function LoginPage() {
     try {
       await handleLoginHook({ email, password });
       setSuccess(true);
-      setTimeout(() =>  navigate("/"), 1500);
+      setTimeout(() => window.location.href = "/dashboard", 1500);
     } catch (e) {
       const msg = e.response?.data?.message || "Login failed";
       setErrors({ password: msg });

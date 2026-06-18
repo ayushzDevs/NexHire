@@ -1,0 +1,113 @@
+@use "../../../styles/variables" as *;
+
+.dashboard-page {
+  min-height: 100vh;
+  background: $bg-deep;
+  font-family: $font-body;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 48px;
+    border-bottom: 0.5px solid $border-subtle;
+  }
+
+  &__logo {
+    font-family: $font-display;
+    font-size: 18px;
+    font-weight: 700;
+    color: $text-primary;
+
+    span { color: $teal; font-style: italic; }
+  }
+
+  &__logout {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: 0.5px solid $border-input;
+    border-radius: $radius-sm;
+    padding: 8px 14px;
+    font-size: 12px;
+    color: $text-muted;
+    cursor: pointer;
+    font-family: $font-body;
+    transition: border-color $transition-fast, color $transition-fast;
+
+    &:hover {
+      border-color: $danger;
+      color: $danger;
+    }
+  }
+
+  &__main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px;
+  }
+}
+
+.dashboard-card {
+  width: 100%;
+  max-width: 460px;
+  background: $bg-panel;
+  border: 0.5px solid $border-subtle;
+  border-radius: $radius-lg;
+  padding: 36px;
+  @include animate(0s);
+
+  &__title {
+    font-family: $font-display;
+    font-size: 24px;
+    font-weight: 700;
+    color: $text-primary;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+
+  &__sub {
+    font-size: 13px;
+    color: $text-dim;
+    font-weight: 300;
+    line-height: 1.6;
+    margin-bottom: 28px;
+  }
+
+  &__loading {
+    display: flex;
+    justify-content: center;
+    padding: 40px 0;
+  }
+
+  &__spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid $border-input;
+    border-top-color: $teal;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+
+  &__ready {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: $teal-glow;
+    border: 0.5px solid rgba($teal, 0.3);
+    border-radius: $radius-md;
+    padding: 12px 14px;
+    font-size: 12px;
+    color: $teal;
+    margin-top: 8px;
+
+    .ti { font-size: 16px; }
+  }
+}
+
+@media (max-width: 600px) {
+  .dashboard-page__header { padding: 20px 24px; }
+  .dashboard-card { padding: 24px; }
+}
