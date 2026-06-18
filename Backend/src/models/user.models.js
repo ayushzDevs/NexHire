@@ -15,9 +15,15 @@ const userSchema = new mongoose.Schema({
     password:{
         type:String,
         required:true
-    }
+    },
 
-})
+    resumeUrl: { type: String, default: null },     // Cloudinary secure_url
+    resumePublicId: { type: String, default: null }, // needed if we ever delete/replace the file
+    targetRole: { type: String, default: null },
+  },
+  { timestamps: true }
+
+)
 
 
 

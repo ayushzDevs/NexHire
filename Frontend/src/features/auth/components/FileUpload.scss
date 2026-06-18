@@ -1,0 +1,80 @@
+@use "../../../styles/variables" as *;
+
+.file-upload {
+  margin-bottom: 24px;
+
+  &__label {
+    display: block;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: $text-ghost;
+    margin-bottom: 8px;
+  }
+
+  &__dropzone {
+    border: 1px dashed $border-input;
+    border-radius: $radius-md;
+    background: $bg-input;
+    padding: 32px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color $transition-med, background $transition-med;
+
+    &:hover {
+      border-color: $teal;
+    }
+
+    &--active {
+      border-color: $teal;
+      background: $teal-glow;
+    }
+
+    &--error {
+      border-color: $danger;
+    }
+  }
+
+  &__icon {
+    font-size: 28px;
+    color: $border-icon;
+    display: block;
+    margin: 0 auto 12px;
+
+    &--success {
+      color: $teal;
+    }
+  }
+
+  &__text {
+    font-size: 13px;
+    color: $text-muted;
+    font-weight: 300;
+    margin-bottom: 4px;
+  }
+
+  &__hint {
+    font-size: 11px;
+    color: $text-ghost;
+    font-weight: 300;
+  }
+
+  &__error {
+    font-size: 11px;
+    color: $danger;
+    margin-top: 6px;
+    font-weight: 300;
+  }
+
+  &__spinner {
+    width: 22px;
+    height: 22px;
+    border: 2px solid $border-input;
+    border-top-color: $teal;
+    border-radius: 50%;
+    display: inline-block;
+    margin-bottom: 12px;
+    animation: spin 0.7s linear infinite;
+  }
+}

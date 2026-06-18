@@ -20,11 +20,13 @@ const authRouter = require("./routes/auth.routes")
 
 
 
+
 /* using all the routes here*/
 app.use("/api/auth",authRouter)
 
 
-
+const profileRoutes = require("../src/routes/profile.routes");
+app.use("/api/profile", profileRoutes);
 
 
 

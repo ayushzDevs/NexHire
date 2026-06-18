@@ -31,12 +31,12 @@ api.interceptors.request.use(
 api.interceptors.response.use(
     (response)=>response,
     (error) =>{
-        if(error.response?.status === 401 || error.response?.status === 409){
-            localStorage.removeItem("token")
-            window.location.href = "/login";
-        }
-        return Promise.reject(error)
+        if (error.response?.status === 401 && !error.config.url.includes("api/auth/get-me")) {
+      localStorage.removeItem("nexhire_token");
+      window.location.href = "/login";
     }
-)
+    return Promise.reject(error);
+  }
+);
 
 export default api;
