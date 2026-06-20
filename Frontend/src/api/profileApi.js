@@ -2,7 +2,9 @@ import api from "./axiosInstance";
 
 const profileApi = {
   async getProfile() {
-    const { data } = await api.get("/api/profile/");
+    const { data } = await api.get("/api/profile/", {
+      headers: { "Content-Type": "application/json" },
+    });
     return data; // { message, profile: { resumeUrl, targetRole } }
   },
 
@@ -10,14 +12,17 @@ const profileApi = {
     const formData = new FormData();
     formData.append("resume", file);
 
-    const { data } = await api.post("/api/profile/resume", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
+    // don't set Content-Type manually — browser sets the multipart boundary automatically
+    const { data } = await api.post("/api/profile/resume", formData);
     return data; // { message, resumeUrl }
   },
 
   async saveTargetRole(targetRole) {
-    const { data } = await api.post("/api/profile/role", { targetRole });
+    const { data } = await api.post(
+      "/api/profile/role",
+      { targetRole },
+      { headers: { "Content-Type": "application/json" } }
+    );
     return data; // { message, targetRole }
   },
 };

@@ -143,19 +143,24 @@ async function LogoutUserController(req,res){
  */
 
 
-async function getMeController(req,res){
-    const user = await userModel.findById(req.user.id)
+async function getMeController(req, res) {
+    const user = await userModel.findById(req.user.id);
+
+    if (!user) {
+        return res.status(401).json({
+            message: "User not found, please login again"
+        });
+    }
 
     return res.status(200).json({
-        message:"ser detailes fetched successfully",
-        user:{
-            id : user._id,
-            username : user.username,
-            email : user.email
+        message: "User details fetched successfully",
+        user: {
+            id: user._id,
+            username: user.username,
+            email: user.email
         }
-    })
+    });
 }
-
 
 module.exports = {
     registerUserController,

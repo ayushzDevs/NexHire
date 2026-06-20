@@ -1,20 +1,21 @@
-require("dotenv").config()
-const app = require("./src/app")
-const connectDB = require("./src/config/db")
-const cors = require("cors")
-const invokeGeminiApi = require("./src/services/ai.services")
+require("dotenv").config();
+const app = require("./src/app");
+const connectDB = require("./src/config/db");
+const cors = require("cors");
 
-port = 3000;
+const port = process.env.PORT || 3000;
+
+async function startServer() {
+  await connectDB();          // ✅ wait for DB first
+  app.listen(port, () => {
+    console.log(`server is running on ${port}`);
+  });
+}
 
 app.use(cors({
   origin: "http://localhost:5173",   // your Vite frontend URL
   credentials: true,                 // required for cookies/auth headers
 }));
 
-connectDB()
 
-invokeGeminiApi()
-
-app.listen(port,()=>{
-    console.log(`server is running on ${port}`)
-})
+startServer();

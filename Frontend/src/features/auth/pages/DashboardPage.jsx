@@ -114,10 +114,10 @@ export default function DashboardPage() {
               />
 
               {readyForNextStep && (
-                <div className="dashboard-card__ready">
+                <a href="/analysis" className="dashboard-card__ready">
                   <i className="ti ti-circle-check" aria-hidden="true" />
-                  Profile complete — skill gap analysis coming next.
-                </div>
+                  Profile complete — view skill gap analysis →
+                </a>
               )}
             </>
           )}

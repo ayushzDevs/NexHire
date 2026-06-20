@@ -4,10 +4,9 @@ const cookieParser = require("cookie-parser")
 app = express()
 
 app.use(cors({
-  origin: "http://localhost:5173",   // your Vite frontend URL
-  credentials: true,                 // required for cookies/auth headers
+  origin: "http://localhost:5173",
+  credentials: true,
 }));
-
 
 
 app.use(express.json())
@@ -32,9 +31,8 @@ app.use("/api/profile", profileRoutes);
 
 
 
-
-
-
+const analyzeRoutes = require("./routes/analyze.routes");
+app.use("/api/analyze", analyzeRoutes);
 
 
 module.exports = app;

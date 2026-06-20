@@ -1,37 +1,27 @@
-import axios from "axios"
-
+import axios from "axios";
 
 const api = axios.create({
-    baseURL : import.meta.env.VITE_API_URL || "https:/localhost:3000",
-    withCredentials:true,
-    headers :{
-        "Content-Type":"application/json"
-    },
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000",
+  withCredentials: true,
+  // ❌ remove the headers block entirely — let each request set its own
 });
 
-
-
 // attach jwt
-
 api.interceptors.request.use(
-    (config)=>{
-        const token = localStorage.getItem("token")
-
-        if(token){
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error)=> Promise.reject(error)
-
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
 );
 
-
-
 api.interceptors.response.use(
-    (response)=>response,
-    (error) =>{
-        if (error.response?.status === 401 && !error.config.url.includes("api/auth/get-me")) {
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401 && !error.config.url.includes("api/auth/get-me")) {
       localStorage.removeItem("nexhire_token");
       window.location.href = "/login";
     }
