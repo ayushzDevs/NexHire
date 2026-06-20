@@ -1,6 +1,7 @@
 const userModel = require("../models/user.models");
 const cloudinary = require("../config/cloudinary.config");
 
+
 /**
  * @name uploadResumeController
  * @description uploads resume (PDF/DOCX) to Cloudinary, saves URL to user
@@ -11,14 +12,22 @@ async function uploadResumeController(req, res) {
     return res.status(400).json({ message: "No file uploaded" });
   }
 
+  // extra server-side guard, even though multer already checked this
+  const allowedMimeTypes = [
+    "application/pdf",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ];
+  if (!allowedMimeTypes.includes(req.file.mimetype)) {
+    return res.status(400).json({ message: "Unsupported file type" });
+  }
+
   try {
-    // convert buffer to base64 data URI for Cloudinary upload
     const base64File = req.file.buffer.toString("base64");
     const dataUri = `data:${req.file.mimetype};base64,${base64File}`;
 
     const result = await cloudinary.uploader.upload(dataUri, {
       folder: "nexhire/resumes",
-      resource_type: "raw", // required for PDF/DOCX, not images
+      resource_type: "raw",
       public_id: `${req.user.id}_${Date.now()}`,
     });
 
@@ -27,6 +36,7 @@ async function uploadResumeController(req, res) {
       {
         resumeUrl: result.secure_url,
         resumePublicId: result.public_id,
+        resumeMimeType: req.file.mimetype,
       },
       { new: true }
     );
@@ -36,9 +46,11 @@ async function uploadResumeController(req, res) {
       resumeUrl: user.resumeUrl,
     });
   } catch (err) {
+    console.error("UPLOAD ERROR:", err);
     return res.status(500).json({ message: "Upload failed", error: err.message });
   }
 }
+
 
 /**
  * @name saveTargetRoleController

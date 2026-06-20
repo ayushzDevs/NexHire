@@ -33,14 +33,14 @@ export const useAuth = () => {
   const handleLogout = async () => {
     setLoading(true);
     try {
-      await authApi.logout();
+      const data = await authApi.logout();
+      setUser(null);
     } catch (e) {
-      // even if the server call fails, clear client-side session
+
     } finally {
-      setUser(null); // ✅ always clear user, regardless of try/catch outcome
       setLoading(false);
     }
-  };
+};
 
   return { user, loading, handleRegisterHook, handleLoginHook, handleLogout };
 };

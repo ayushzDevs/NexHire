@@ -20,11 +20,12 @@ const authApi = {
         return data;
     },
 
-    async logout(){
-        const {data} = await api.post("/api/auth/logout");
-        localStorage.removeItem("token")
+    async logout() {
+        const { data } = await api.post("/api/auth/logout");
+        localStorage.removeItem("token");   // just clear storage, no redirect here
         return data;
     },
+
 
     async getMe(){
         const {data} = await api.get("/api/auth/get-me");

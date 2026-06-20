@@ -35,7 +35,7 @@ authRouter.post("/login",authController.LoginUserController)
  */
 
 
-authRouter.get("/logout",authController.LogoutUserController)
+authRouter.post("/logout",authController.LogoutUserController)
 
 
 /**

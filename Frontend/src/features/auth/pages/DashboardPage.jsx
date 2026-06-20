@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router";
 import FileUpload    from "../components/FileUpload";
 import SubmitButton  from "../components/SubmitButton";
 import FormField     from "../components/FormField";
@@ -7,7 +8,8 @@ import { useAuth }   from "../hooks/useAuth";
 import "./DashboardPage.scss";
 
 export default function DashboardPage() {
-  const { logout } = useAuth();
+  const { handleLogout } = useAuth();
+  const navigate = useNavigate();
 
   const [resumeUrl, setResumeUrl]       = useState(null);
   const [targetRole, setTargetRole]     = useState("");
@@ -64,13 +66,18 @@ export default function DashboardPage() {
     }
   }
 
+  async function onLogoutClick() {
+    await handleLogout();
+    navigate("/login", { replace: true });
+  }
+
   const readyForNextStep = Boolean(resumeUrl) && Boolean(savedRole);
 
   return (
     <div className="dashboard-page">
       <header className="dashboard-page__header">
         <div className="dashboard-page__logo">Nex<span>Hire</span></div>
-        <button className="dashboard-page__logout" onClick={logout}>
+        <button className="dashboard-page__logout" onClick={onLogoutClick}>
           <i className="ti ti-logout" aria-hidden="true" /> Logout
         </button>
       </header>
@@ -114,10 +121,10 @@ export default function DashboardPage() {
               />
 
               {readyForNextStep && (
-                <div className="dashboard-card__ready">
+                <Link to="/analysis" className="dashboard-card__ready">
                   <i className="ti ti-circle-check" aria-hidden="true" />
-                  Profile complete — skill gap analysis coming next.
-                </div>
+                  Profile complete — view skill gap analysis →
+                </Link>
               )}
             </>
           )}

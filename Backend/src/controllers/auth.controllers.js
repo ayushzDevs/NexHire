@@ -50,7 +50,12 @@ async function registerUserController(req,res){
     }, process.env.JWT_SECRET,
     {expiresIn:"5d"})
 
-    res.cookie("token",token)
+    res.cookie("token", token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+        maxAge: 5 * 24 * 60 * 60 * 1000, // 5 days
+    });
 
     res.status(201).json({
         message: "User registered successfully",
@@ -101,7 +106,12 @@ async function LoginUserController(req,res){
         , process.env.JWT_SECRET,
             {expiresIn:"5d"})
 
-    res.cookie("token",token)
+    res.cookie("token",token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+        maxAge: 5 * 24 * 60 * 60 * 1000, // 5 days
+    });
 
     res.status(200).json({
         message: "User logged in successfully",
@@ -122,40 +132,47 @@ async function LoginUserController(req,res){
  * @description Logouts user from the system and blacklists their user token from cookies
  */
 
-async function LogoutUserController(req,res){
+async function LogoutUserController(req, res) {
     const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
 
-    if(token){
-        await tokenBlacklistModel.create({ token })
+    if (token) {
+        await tokenBlacklistModel.create({ token });
     }
 
-    res.clearCookie("token")
+    res.clearCookie("token", {
+        httpOnly: true,
+        secure: false,      // set true only if serving over https in production
+        sameSite: "lax",
+    });
 
     res.status(200).json({
-        message : "User logged out successfully"
-
-    })
-    }
-
+        message: "User logged out successfully"
+    });
+}
 /**
  * @name getMeController
  * @description get the current logged in user details 
  */
 
 
-async function getMeController(req,res){
-    const user = await userModel.findById(req.user.id)
+async function getMeController(req, res) {
+    const user = await userModel.findById(req.user.id);
+
+    if (!user) {
+        return res.status(401).json({
+            message: "User not found, please login again"
+        });
+    }
 
     return res.status(200).json({
-        message:"ser detailes fetched successfully",
-        user:{
-            id : user._id,
-            username : user.username,
-            email : user.email
+        message: "User details fetched successfully",
+        user: {
+            id: user._id,
+            username: user.username,
+            email: user.email
         }
-    })
+    });
 }
-
 
 module.exports = {
     registerUserController,

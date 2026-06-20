@@ -4,10 +4,9 @@ const cookieParser = require("cookie-parser")
 app = express()
 
 app.use(cors({
-  origin: "http://localhost:5173",   // your Vite frontend URL
-  credentials: true,                 // required for cookies/auth headers
+  origin: "http://localhost:5173",
+  credentials: true,
 }));
-
 
 
 app.use(express.json())
@@ -32,9 +31,29 @@ app.use("/api/profile", profileRoutes);
 
 
 
+const analyzeRoutes = require("./routes/analyze.routes");
+app.use("/api/analyze", analyzeRoutes);
+
+const resumeRoutes = require("./routes/resume.routes");
+app.use("/api/resume", resumeRoutes);
 
 
+const multer = require("multer");
 
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    if (err.code === "LIMIT_FILE_SIZE") {
+      return res.status(400).json({ message: "File too large. Max size is 5MB." });
+    }
+    return res.status(400).json({ message: err.message });
+  }
 
+  if (err.message === "Only PDF and DOCX files are allowed") {
+    return res.status(400).json({ message: err.message });
+  }
+
+  console.error("UNHANDLED ERROR:", err);
+  return res.status(500).json({ message: "Something went wrong" });
+});
 
 module.exports = app;
