@@ -41,7 +41,7 @@ ${resumeText}
 `;
 
   const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
+    model: "gemini-3.5-flash",
     contents: prompt,
   });
 
@@ -67,7 +67,7 @@ Return ONLY valid JSON, no markdown, in this exact shape:
 `;
 
   const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
+    model: "gemini-3.5-flash",
     contents: prompt,
   });
 
@@ -92,11 +92,11 @@ ${resumeText}
 `;
 
   const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
+    model: "gemini-3.5-flash",
     contents: prompt,
   });
 
-  return safeParseJSON(response.text.trim());
+  return response.text.trim();
 }
 
 module.exports = {

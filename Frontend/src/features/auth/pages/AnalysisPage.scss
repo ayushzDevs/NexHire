@@ -190,3 +190,66 @@
 
   &:hover { border-color: $teal; color: $teal; }
 }
+
+// add to existing AnalysisPage.scss
+
+.analysis-resume-card {
+  text-align: center;
+}
+
+.generate-resume-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: $teal;
+  color: $teal-dark;
+  border: none;
+  border-radius: $radius-md;
+  padding: 12px 24px;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: $font-body;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: opacity $transition-fast;
+
+  &:hover:not(:disabled) { opacity: 0.88; }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  &__spinner {
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid rgba($teal-dark, 0.3);
+    border-top-color: $teal-dark;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+}
+
+.resume-ready {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 13px;
+  color: $teal;
+
+  .ti { font-size: 18px; }
+
+  &__download {
+    background: $teal;
+    color: $teal-dark;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: $radius-sm;
+    font-size: 12px;
+    font-weight: 500;
+    margin-left: 8px;
+  }
+}
+
+.analysis-empty__error {
+  color: $danger;
+  font-size: 12px;
+  margin-top: 10px;
+}

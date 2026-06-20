@@ -37,10 +37,15 @@ const reportSchema = new mongoose.Schema({
     resumeText: { type: String },
     selfDescription: { type: String },
     matchScore: { type: Number, min: 0, max: 100 },
+    matchedSkills: [{ type: String }],
     technicalQuestions: [technicalQuestionSchema],
     behavioralQuestions: [behaviouralQuestionSchema],
     skillGap: [skillGapSchema],
-    prepPlan: [prepPlanSchema]
+    prepPlan: [prepPlanSchema],
+
+    // ── NEW fields for ATS resume generation ──
+    correctedResumeText: { type: String, default: null },
+    correctedResumeUrl: { type: String, default: null },
 }, { timestamps: true });
 
 const InterviewReport = mongoose.model("InterviewReport", reportSchema);

@@ -6,11 +6,6 @@ const {
   generateInterviewQuestions,
 } = require("../services/ai.services");
 
-/**
- * @name analyzeProfileController
- * @description extracts resume text, runs skill-gap + question generation, saves as a report
- * @access Private
- */
 async function analyzeProfileController(req, res) {
   const user = await userModel.findById(req.user.id);
 
@@ -33,37 +28,33 @@ async function analyzeProfileController(req, res) {
       jobDescription: user.targetRole,
       resumeText,
       matchScore: gapResult.readinessScore,
+      matchedSkills: gapResult.matchedSkills,   // ✅ NEW LINE
       skillGap: gapResult.missingSkills.map(skill => ({
-        skill,
-        severity: "medium",
+          skill,
+          severity: "medium",
       })),
       technicalQuestions: questions.technical.map(q => ({
-        question: q,
-        intention: "Assess technical depth",
-        answer: "",
+          question: q,
+          intention: "Assess technical depth",
+          answer: "",
       })),
       behavioralQuestions: questions.behavioral.map(q => ({
-        question: q,
-        intention: "Assess soft skills fit",
-        answer: "",
+          question: q,
+          intention: "Assess soft skills fit",
+          answer: "",
       })),
-    });
+  });
 
     return res.status(200).json({
       message: "Analysis complete",
       report,
     });
-  }    catch (err) {
-    console.error("ANALYZE ERROR:", err);   // 👈 ADD THIS LINE HERE
+  } catch (err) {
+    console.error("ANALYZE ERROR:", err);
     return res.status(500).json({ message: "Analysis failed", error: err.message });
   }
 }
 
-/**
- * @name getAnalysisController
- * @description returns the latest saved analysis report for this user
- * @access Private
- */
 async function getAnalysisController(req, res) {
   const report = await InterviewReport
     .findOne({ userId: req.user.id })

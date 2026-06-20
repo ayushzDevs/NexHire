@@ -12,19 +12,25 @@ async function uploadResumeController(req, res) {
     return res.status(400).json({ message: "No file uploaded" });
   }
 
+  // extra server-side guard, even though multer already checked this
+  const allowedMimeTypes = [
+    "application/pdf",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ];
+  if (!allowedMimeTypes.includes(req.file.mimetype)) {
+    return res.status(400).json({ message: "Unsupported file type" });
+  }
+
   try {
-    // convert multer's memory buffer into a base64 data URI
     const base64File = req.file.buffer.toString("base64");
     const dataUri = `data:${req.file.mimetype};base64,${base64File}`;
 
-    // upload to cloudinary — resource_type "raw" is required for PDF/DOCX
     const result = await cloudinary.uploader.upload(dataUri, {
       folder: "nexhire/resumes",
       resource_type: "raw",
       public_id: `${req.user.id}_${Date.now()}`,
     });
 
-    // save returned url + public_id on the user document
     const user = await userModel.findByIdAndUpdate(
       req.user.id,
       {
@@ -40,10 +46,11 @@ async function uploadResumeController(req, res) {
       resumeUrl: user.resumeUrl,
     });
   } catch (err) {
-    console.error("UPLOAD ERROR:", err);   // 👈 add this
+    console.error("UPLOAD ERROR:", err);
     return res.status(500).json({ message: "Upload failed", error: err.message });
+  }
 }
-}
+
 
 /**
  * @name saveTargetRoleController

@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from "react";
 import analyzeApi from "../../../api/analyzeApi";
+import resumeApi  from "../../../api/resumeApi";
 import "./AnalysisPage.scss";
 
 export default function AnalysisPage() {
-  const [skillGap, setSkillGap]   = useState(null);
-  const [questions, setQuestions] = useState(null);
-  const [loading, setLoading]     = useState(true);
-  const [error, setError]         = useState(null);
+  const [report, setReport]   = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError]     = useState(null);
+
+  const [generatingResume, setGeneratingResume] = useState(false);
+  const [resumeUrl, setResumeUrl]               = useState(null);
+  const [resumeError, setResumeError]           = useState(null);
 
   useEffect(() => {
     analyzeApi
       .getAnalysis()
-      .then((data) => {
-        setSkillGap(data.skillGap);
-        setQuestions(data.questions);
-      })
+      .then((data) => setReport(data.report))
       .catch(() => setError("no-analysis"))
       .finally(() => setLoading(false));
   }, []);
@@ -24,12 +25,24 @@ export default function AnalysisPage() {
     setError(null);
     try {
       const data = await analyzeApi.runAnalysis();
-      setSkillGap(data.skillGap);
-      setQuestions(data.questions);
+      setReport(data.report);
     } catch (err) {
       setError(err.response?.data?.message || "Analysis failed");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleGenerateResume() {
+    setGeneratingResume(true);
+    setResumeError(null);
+    try {
+      const data = await resumeApi.generateAtsResume();
+      setResumeUrl(data.resumeUrl);
+    } catch (err) {
+      setResumeError(err.response?.data?.message || "Could not generate resume");
+    } finally {
+      setGeneratingResume(false);
     }
   }
 
@@ -41,7 +54,7 @@ export default function AnalysisPage() {
     );
   }
 
-  if (error === "no-analysis" || !skillGap) {
+  if (error === "no-analysis" || !report) {
     return (
       <div className="analysis-page analysis-page--center">
         <div className="analysis-empty">
@@ -49,6 +62,9 @@ export default function AnalysisPage() {
           <button className="analysis-empty__btn" onClick={handleRunAnalysis}>
             Run skill gap analysis
           </button>
+          {error && error !== "no-analysis" && (
+            <p className="analysis-empty__error">{error}</p>
+          )}
         </div>
       </div>
     );
@@ -64,55 +80,96 @@ export default function AnalysisPage() {
       <main className="analysis-page__main">
         {/* readiness score */}
         <div className="analysis-card analysis-card--score">
-          <div className="score-ring" style={{ "--pct": skillGap.readinessScore }}>
-            <span>{skillGap.readinessScore}%</span>
+          <div className="score-ring" style={{ "--pct": report.matchScore }}>
+            <span>{report.matchScore}%</span>
           </div>
-          <p className="analysis-card__summary">{skillGap.summary}</p>
+          <p className="analysis-card__summary">
+            Target role: {report.jobDescription}
+          </p>
         </div>
 
-        {/* matched / missing skills */}
+        {/* matched + missing skills */}
         <div className="analysis-skills-grid">
           <div className="analysis-card">
             <h3 className="analysis-card__title analysis-card__title--good">
               <i className="ti ti-circle-check" aria-hidden="true" /> Matched Skills
             </h3>
             <div className="skill-tags">
-              {skillGap.matchedSkills.map(s => (
-                <span key={s} className="skill-tag skill-tag--good">{s}</span>
+              {report.matchedSkills.map(skill => (
+                <span key={skill} className="skill-tag skill-tag--good">{skill}</span>
               ))}
             </div>
           </div>
 
           <div className="analysis-card">
             <h3 className="analysis-card__title analysis-card__title--bad">
-              <i className="ti ti-alert-triangle" aria-hidden="true" /> Missing Skills
+              <i className="ti ti-alert-triangle" aria-hidden="true" /> Skill Gaps
             </h3>
             <div className="skill-tags">
-              {skillGap.missingSkills.map(s => (
-                <span key={s} className="skill-tag skill-tag--bad">{s}</span>
+              {report.skillGap.map(({ skill, severity }) => (
+                <span key={skill} className={`skill-tag skill-tag--${severity === "high" ? "bad" : "good"}`}>
+                  {skill} <small>({severity})</small>
+                </span>
               ))}
             </div>
           </div>
         </div>
 
         {/* interview questions */}
-        {questions && (
-          <div className="analysis-questions-grid">
-            <div className="analysis-card">
-              <h3 className="analysis-card__title">Technical Questions</h3>
-              <ol className="question-list">
-                {questions.technical.map((q, i) => <li key={i}>{q}</li>)}
-              </ol>
-            </div>
-
-            <div className="analysis-card">
-              <h3 className="analysis-card__title">Behavioral Questions</h3>
-              <ol className="question-list">
-                {questions.behavioral.map((q, i) => <li key={i}>{q}</li>)}
-              </ol>
-            </div>
+        <div className="analysis-questions-grid">
+          <div className="analysis-card">
+            <h3 className="analysis-card__title">Technical Questions</h3>
+            <ol className="question-list">
+              {report.technicalQuestions.map((q, i) => (
+                <li key={i}>{q.question}</li>
+              ))}
+            </ol>
           </div>
-        )}
+
+          <div className="analysis-card">
+            <h3 className="analysis-card__title">Behavioral Questions</h3>
+            <ol className="question-list">
+              {report.behavioralQuestions.map((q, i) => (
+                <li key={i}>{q.question}</li>
+              ))}
+            </ol>
+          </div>
+        </div>
+
+        {/* ATS resume generation */}
+        <div className="analysis-card analysis-resume-card">
+          <h3 className="analysis-card__title">ATS-Friendly Resume</h3>
+
+          {resumeUrl ? (
+            <div className="resume-ready">
+              <i className="ti ti-file-check" aria-hidden="true" />
+              <span>Your corrected resume is ready</span>
+              <a href={resumeUrl} target="_blank" rel="noopener noreferrer" className="resume-ready__download">
+                Download PDF
+              </a>
+            </div>
+          ) : (
+            <>
+              <p className="analysis-card__summary">
+                Generate a rewritten, ATS-optimized version of your resume tailored to {report.jobDescription}.
+              </p>
+              <button
+                className="generate-resume-btn"
+                onClick={handleGenerateResume}
+                disabled={generatingResume}
+              >
+                {generatingResume ? (
+                  <span className="generate-resume-btn__spinner" />
+                ) : (
+                  <>
+                    <i className="ti ti-sparkles" aria-hidden="true" /> Generate ATS Resume
+                  </>
+                )}
+              </button>
+              {resumeError && <p className="analysis-empty__error">{resumeError}</p>}
+            </>
+          )}
+        </div>
 
         <button className="analysis-rerun-btn" onClick={handleRunAnalysis}>
           <i className="ti ti-refresh" aria-hidden="true" /> Re-run analysis
